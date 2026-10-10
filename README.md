@@ -13,4 +13,4 @@ AI-powered strength training and nutrition platform.
 
 ## Project status
 
-Initial repository and pnpm workspace setup.
+Implementation of user registration and authentication.
