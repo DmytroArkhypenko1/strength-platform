@@ -6,13 +6,13 @@ import { UpsertProfileDto } from './dto/upsert-profile.dto.js';
 export class ProfileService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findOne(userId: number) {
+  findOne(userId: number) {
     return this.prisma.userProfile.findUnique({
       where: { userId },
     });
   }
 
-  async upsert(userId: number, dto: UpsertProfileDto) {
+  upsert(userId: number, dto: UpsertProfileDto) {
     const { dateOfBirth, ...profileData } = dto;
 
     return this.prisma.userProfile.upsert({
