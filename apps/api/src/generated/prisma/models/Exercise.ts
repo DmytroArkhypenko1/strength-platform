@@ -40,7 +40,6 @@ export type ExerciseMinAggregateOutputType = {
   muscleGroup: string | null
   equipment: string | null
   description: string | null
-  isCustom: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -51,7 +50,6 @@ export type ExerciseMaxAggregateOutputType = {
   muscleGroup: string | null
   equipment: string | null
   description: string | null
-  isCustom: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -62,7 +60,6 @@ export type ExerciseCountAggregateOutputType = {
   muscleGroup: number
   equipment: number
   description: number
-  isCustom: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -83,7 +80,6 @@ export type ExerciseMinAggregateInputType = {
   muscleGroup?: true
   equipment?: true
   description?: true
-  isCustom?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,7 +90,6 @@ export type ExerciseMaxAggregateInputType = {
   muscleGroup?: true
   equipment?: true
   description?: true
-  isCustom?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -105,7 +100,6 @@ export type ExerciseCountAggregateInputType = {
   muscleGroup?: true
   equipment?: true
   description?: true
-  isCustom?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -203,7 +197,6 @@ export type ExerciseGroupByOutputType = {
   muscleGroup: string | null
   equipment: string | null
   description: string | null
-  isCustom: boolean
   createdAt: Date
   updatedAt: Date
   _count: ExerciseCountAggregateOutputType | null
@@ -237,7 +230,6 @@ export type ExerciseWhereInput = {
   muscleGroup?: Prisma.StringNullableFilter<"Exercise"> | string | null
   equipment?: Prisma.StringNullableFilter<"Exercise"> | string | null
   description?: Prisma.StringNullableFilter<"Exercise"> | string | null
-  isCustom?: Prisma.BoolFilter<"Exercise"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Exercise"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Exercise"> | Date | string
   planExercises?: Prisma.PlanExerciseListRelationFilter
@@ -250,7 +242,6 @@ export type ExerciseOrderByWithRelationInput = {
   muscleGroup?: Prisma.SortOrderInput | Prisma.SortOrder
   equipment?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
-  isCustom?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   planExercises?: Prisma.PlanExerciseOrderByRelationAggregateInput
@@ -260,19 +251,18 @@ export type ExerciseOrderByWithRelationInput = {
 
 export type ExerciseWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  name?: string
   AND?: Prisma.ExerciseWhereInput | Prisma.ExerciseWhereInput[]
   OR?: Prisma.ExerciseWhereInput[]
   NOT?: Prisma.ExerciseWhereInput | Prisma.ExerciseWhereInput[]
-  name?: Prisma.StringFilter<"Exercise"> | string
   muscleGroup?: Prisma.StringNullableFilter<"Exercise"> | string | null
   equipment?: Prisma.StringNullableFilter<"Exercise"> | string | null
   description?: Prisma.StringNullableFilter<"Exercise"> | string | null
-  isCustom?: Prisma.BoolFilter<"Exercise"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Exercise"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Exercise"> | Date | string
   planExercises?: Prisma.PlanExerciseListRelationFilter
   workoutSets?: Prisma.WorkoutSetListRelationFilter
-}, "id">
+}, "id" | "name">
 
 export type ExerciseOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -280,7 +270,6 @@ export type ExerciseOrderByWithAggregationInput = {
   muscleGroup?: Prisma.SortOrderInput | Prisma.SortOrder
   equipment?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
-  isCustom?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ExerciseCountOrderByAggregateInput
@@ -299,7 +288,6 @@ export type ExerciseScalarWhereWithAggregatesInput = {
   muscleGroup?: Prisma.StringNullableWithAggregatesFilter<"Exercise"> | string | null
   equipment?: Prisma.StringNullableWithAggregatesFilter<"Exercise"> | string | null
   description?: Prisma.StringNullableWithAggregatesFilter<"Exercise"> | string | null
-  isCustom?: Prisma.BoolWithAggregatesFilter<"Exercise"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Exercise"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Exercise"> | Date | string
 }
@@ -309,7 +297,6 @@ export type ExerciseCreateInput = {
   muscleGroup?: string | null
   equipment?: string | null
   description?: string | null
-  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   planExercises?: Prisma.PlanExerciseCreateNestedManyWithoutExerciseInput
@@ -322,7 +309,6 @@ export type ExerciseUncheckedCreateInput = {
   muscleGroup?: string | null
   equipment?: string | null
   description?: string | null
-  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   planExercises?: Prisma.PlanExerciseUncheckedCreateNestedManyWithoutExerciseInput
@@ -334,7 +320,6 @@ export type ExerciseUpdateInput = {
   muscleGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   equipment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   planExercises?: Prisma.PlanExerciseUpdateManyWithoutExerciseNestedInput
@@ -347,7 +332,6 @@ export type ExerciseUncheckedUpdateInput = {
   muscleGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   equipment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   planExercises?: Prisma.PlanExerciseUncheckedUpdateManyWithoutExerciseNestedInput
@@ -360,7 +344,6 @@ export type ExerciseCreateManyInput = {
   muscleGroup?: string | null
   equipment?: string | null
   description?: string | null
-  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -370,7 +353,6 @@ export type ExerciseUpdateManyMutationInput = {
   muscleGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   equipment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -381,7 +363,6 @@ export type ExerciseUncheckedUpdateManyInput = {
   muscleGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   equipment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -398,7 +379,6 @@ export type ExerciseCountOrderByAggregateInput = {
   muscleGroup?: Prisma.SortOrder
   equipment?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  isCustom?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -413,7 +393,6 @@ export type ExerciseMaxOrderByAggregateInput = {
   muscleGroup?: Prisma.SortOrder
   equipment?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  isCustom?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -424,7 +403,6 @@ export type ExerciseMinOrderByAggregateInput = {
   muscleGroup?: Prisma.SortOrder
   equipment?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  isCustom?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -436,10 +414,6 @@ export type ExerciseSumOrderByAggregateInput = {
 export type ExerciseScalarRelationFilter = {
   is?: Prisma.ExerciseWhereInput
   isNot?: Prisma.ExerciseWhereInput
-}
-
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
 }
 
 export type ExerciseCreateNestedOneWithoutPlanExercisesInput = {
@@ -475,7 +449,6 @@ export type ExerciseCreateWithoutPlanExercisesInput = {
   muscleGroup?: string | null
   equipment?: string | null
   description?: string | null
-  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   workoutSets?: Prisma.WorkoutSetCreateNestedManyWithoutExerciseInput
@@ -487,7 +460,6 @@ export type ExerciseUncheckedCreateWithoutPlanExercisesInput = {
   muscleGroup?: string | null
   equipment?: string | null
   description?: string | null
-  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   workoutSets?: Prisma.WorkoutSetUncheckedCreateNestedManyWithoutExerciseInput
@@ -514,7 +486,6 @@ export type ExerciseUpdateWithoutPlanExercisesInput = {
   muscleGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   equipment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workoutSets?: Prisma.WorkoutSetUpdateManyWithoutExerciseNestedInput
@@ -526,7 +497,6 @@ export type ExerciseUncheckedUpdateWithoutPlanExercisesInput = {
   muscleGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   equipment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workoutSets?: Prisma.WorkoutSetUncheckedUpdateManyWithoutExerciseNestedInput
@@ -537,7 +507,6 @@ export type ExerciseCreateWithoutWorkoutSetsInput = {
   muscleGroup?: string | null
   equipment?: string | null
   description?: string | null
-  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   planExercises?: Prisma.PlanExerciseCreateNestedManyWithoutExerciseInput
@@ -549,7 +518,6 @@ export type ExerciseUncheckedCreateWithoutWorkoutSetsInput = {
   muscleGroup?: string | null
   equipment?: string | null
   description?: string | null
-  isCustom?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   planExercises?: Prisma.PlanExerciseUncheckedCreateNestedManyWithoutExerciseInput
@@ -576,7 +544,6 @@ export type ExerciseUpdateWithoutWorkoutSetsInput = {
   muscleGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   equipment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   planExercises?: Prisma.PlanExerciseUpdateManyWithoutExerciseNestedInput
@@ -588,7 +555,6 @@ export type ExerciseUncheckedUpdateWithoutWorkoutSetsInput = {
   muscleGroup?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   equipment?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCustom?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   planExercises?: Prisma.PlanExerciseUncheckedUpdateManyWithoutExerciseNestedInput
@@ -640,7 +606,6 @@ export type ExerciseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   muscleGroup?: boolean
   equipment?: boolean
   description?: boolean
-  isCustom?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   planExercises?: boolean | Prisma.Exercise$planExercisesArgs<ExtArgs>
@@ -656,12 +621,11 @@ export type ExerciseSelectScalar = {
   muscleGroup?: boolean
   equipment?: boolean
   description?: boolean
-  isCustom?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ExerciseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "muscleGroup" | "equipment" | "description" | "isCustom" | "createdAt" | "updatedAt", ExtArgs["result"]["exercise"]>
+export type ExerciseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "muscleGroup" | "equipment" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["exercise"]>
 export type ExerciseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   planExercises?: boolean | Prisma.Exercise$planExercisesArgs<ExtArgs>
   workoutSets?: boolean | Prisma.Exercise$workoutSetsArgs<ExtArgs>
@@ -680,7 +644,6 @@ export type $ExercisePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     muscleGroup: string | null
     equipment: string | null
     description: string | null
-    isCustom: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["exercise"]>
@@ -1059,7 +1022,6 @@ export interface ExerciseFieldRefs {
   readonly muscleGroup: Prisma.FieldRef<"Exercise", 'String'>
   readonly equipment: Prisma.FieldRef<"Exercise", 'String'>
   readonly description: Prisma.FieldRef<"Exercise", 'String'>
-  readonly isCustom: Prisma.FieldRef<"Exercise", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Exercise", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Exercise", 'DateTime'>
 }

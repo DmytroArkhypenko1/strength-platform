@@ -101,11 +101,10 @@ enum GoalRate {
 
 model Exercise {
   id           Int             @id @default(autoincrement())
-  name         String          @db.VarChar(150)
+  name         String          @unique @db.VarChar(150)
   muscleGroup  String?         @db.VarChar(80)
   equipment    String?         @db.VarChar(80)
   description  String?         @db.Text
-  isCustom     Boolean         @default(false)
   planExercises PlanExercise[]
   workoutSets  WorkoutSet[]
   createdAt    DateTime        @default(now())

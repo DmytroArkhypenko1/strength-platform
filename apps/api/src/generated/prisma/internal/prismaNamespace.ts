@@ -1176,7 +1176,6 @@ export const ExerciseScalarFieldEnum = {
   muscleGroup: 'muscleGroup',
   equipment: 'equipment',
   description: 'description',
-  isCustom: 'isCustom',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1432,16 +1431,16 @@ export type EnumGoalRateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'Boolean'
+ * Reference to a field of type 'PlanSource'
  */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+export type EnumPlanSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlanSource'>
     
 
 
 /**
- * Reference to a field of type 'PlanSource'
+ * Reference to a field of type 'Boolean'
  */
-export type EnumPlanSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlanSource'>
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 

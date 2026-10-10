@@ -130,7 +130,6 @@ export const ExerciseScalarFieldEnum = {
   muscleGroup: 'muscleGroup',
   equipment: 'equipment',
   description: 'description',
-  isCustom: 'isCustom',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

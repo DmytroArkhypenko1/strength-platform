@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { ProfileModule } from './profile/profile.module.js';
 import { WeightRecordsModule } from './weight-records/weight-records.module.js';
+import { ExercisesModule } from './exercises/exercises.module.js';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { WeightRecordsModule } from './weight-records/weight-records.module.js';
     AuthModule, 
     ProfileModule, 
     WeightRecordsModule,
+    ExercisesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

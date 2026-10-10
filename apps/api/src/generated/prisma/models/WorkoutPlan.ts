@@ -495,6 +495,10 @@ export type EnumPlanSourceFieldUpdateOperationsInput = {
   set?: $Enums.PlanSource
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type WorkoutPlanCreateNestedOneWithoutDaysInput = {
   create?: Prisma.XOR<Prisma.WorkoutPlanCreateWithoutDaysInput, Prisma.WorkoutPlanUncheckedCreateWithoutDaysInput>
   connectOrCreate?: Prisma.WorkoutPlanCreateOrConnectWithoutDaysInput
