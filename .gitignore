@@ -12,3 +12,7 @@ __pycache__/
 .DS_Store
 Thumbs.db
 *.tsbuildinfo
+apps/api/.windsurf/
+apps/api/.agents/
+apps/api/.claude/
+apps/api/skills-lock.json

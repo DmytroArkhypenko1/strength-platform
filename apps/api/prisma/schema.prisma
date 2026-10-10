@@ -8,10 +8,224 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  email        String   @unique @db.VarChar(255)
-  name         String?  @db.VarChar(100)
-  passwordHash String?  @db.VarChar(255)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id           Int           @id @default(autoincrement())
+  email        String        @unique @db.VarChar(255)
+  name         String?       @db.VarChar(100)
+  passwordHash String?       @db.VarChar(255)
+  profile      UserProfile?
+  weightRecords WeightRecord[]
+  workoutPlans     WorkoutPlan[]
+  workoutSessions  WorkoutSession[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model UserProfile {
+  id                    Int                @id @default(autoincrement())
+  userId                Int                @unique
+  heightCm              Decimal?           @db.Decimal(5, 2)
+  dateOfBirth           DateTime?          @db.Date
+  sex                   Sex?
+  unitSystem            UnitSystem         @default(METRIC)
+  activityLevel         ActivityLevel?
+  trainingExperience    TrainingExperience?
+  primaryGoal           PrimaryGoal?
+  weightGoal            WeightGoal?
+  goalRate              GoalRate?
+  sessionsPerWeek       Int?
+  sessionDurationMinutes Int?
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model WeightRecord {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  weightKg   Decimal  @db.Decimal(5, 2)
+  recordedAt DateTime @default(now())
+  note       String?  @db.VarChar(255)
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, recordedAt])
+}
+
+enum Sex {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+enum UnitSystem {
+  METRIC
+  IMPERIAL
+}
+
+enum ActivityLevel {
+  SEDENTARY
+  LIGHTLY_ACTIVE
+  MODERATELY_ACTIVE
+  VERY_ACTIVE
+  EXTRA_ACTIVE
+}
+
+enum TrainingExperience {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum PrimaryGoal {
+  MUSCLE_BUILDING
+  STRENGTH
+  BODY_RECOMPOSITION
+}
+
+enum WeightGoal {
+  GAIN
+  MAINTAIN
+  LOSE
+}
+
+enum GoalRate {
+  CONSERVATIVE
+  MODERATE
+  AGGRESSIVE
+}
+
+
+
+model Exercise {
+  id           Int             @id @default(autoincrement())
+  name         String          @db.VarChar(150)
+  muscleGroup  String?         @db.VarChar(80)
+  equipment    String?         @db.VarChar(80)
+  description  String?         @db.Text
+  isCustom     Boolean         @default(false)
+  planExercises PlanExercise[]
+  workoutSets  WorkoutSet[]
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([name])
+}
+
+model WorkoutPlan {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  name        String    @db.VarChar(150)
+  description String?   @db.Text
+  source      PlanSource @default(MANUAL)
+  isActive    Boolean   @default(false)
+  days        PlanDay[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isActive])
+}
+
+model PlanDay {
+  id         Int             @id @default(autoincrement())
+  planId     Int
+  name       String          @db.VarChar(100)
+  dayOfWeek  Int?
+  sortOrder  Int
+  exercises  PlanExercise[]
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  plan WorkoutPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId, sortOrder])
+}
+
+model PlanExercise {
+  id                Int       @id @default(autoincrement())
+  planDayId         Int
+  exerciseId        Int
+  sortOrder         Int
+  targetSets        Int       @default(3)
+  targetRepsMin     Int       @default(8)
+  targetRepsMax     Int       @default(12)
+  targetWeightKg    Decimal?  @db.Decimal(7, 2)
+  restSeconds       Int?
+  targetRpe         Decimal?  @db.Decimal(3, 1)
+  targetRir         Decimal?  @db.Decimal(3, 1)
+  sets              PlanSet[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  planDay  PlanDay  @relation(fields: [planDayId], references: [id], onDelete: Cascade)
+  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+
+  @@index([planDayId, sortOrder])
+}
+
+model PlanSet {
+  id             Int      @id @default(autoincrement())
+  planExerciseId Int
+  setNumber      Int
+  setType        SetType  @default(WORKING)
+  targetReps     Int?
+  targetWeightKg Decimal? @db.Decimal(7, 2)
+  targetRpe      Decimal? @db.Decimal(3, 1)
+  targetRir      Decimal? @db.Decimal(3, 1)
+
+  planExercise PlanExercise @relation(fields: [planExerciseId], references: [id], onDelete: Cascade)
+
+  @@unique([planExerciseId, setNumber])
+}
+
+model WorkoutSession {
+  id          Int         @id @default(autoincrement())
+  userId      Int
+  planDayId   Int?
+  name        String      @db.VarChar(150)
+  startedAt   DateTime    @default(now())
+  completedAt DateTime?
+  notes       String?     @db.Text
+  sets        WorkoutSet[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, startedAt])
+}
+
+model WorkoutSet {
+  id             Int       @id @default(autoincrement())
+  sessionId      Int
+  exerciseId     Int
+  setNumber      Int
+  setType        SetType   @default(WORKING)
+  weightKg       Decimal   @db.Decimal(7, 2)
+  reps           Int
+  rpe            Decimal?  @db.Decimal(3, 1)
+  rir            Decimal?  @db.Decimal(3, 1)
+  completedAt    DateTime  @default(now())
+  notes          String?   @db.VarChar(255)
+
+  session  WorkoutSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  exercise Exercise       @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+
+  @@index([sessionId, exerciseId])
+}
+
+enum PlanSource {
+  MANUAL
+  AI_GENERATED
+}
+
+enum SetType {
+  WARMUP
+  WORKING
+  DROP
+  FAILURE
 }

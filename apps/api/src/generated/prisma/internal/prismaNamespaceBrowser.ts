@@ -51,7 +51,16 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  User: 'User'
+  User: 'User',
+  UserProfile: 'UserProfile',
+  WeightRecord: 'WeightRecord',
+  Exercise: 'Exercise',
+  WorkoutPlan: 'WorkoutPlan',
+  PlanDay: 'PlanDay',
+  PlanExercise: 'PlanExercise',
+  PlanSet: 'PlanSet',
+  WorkoutSession: 'WorkoutSession',
+  WorkoutSet: 'WorkoutSet'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -82,6 +91,145 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const UserProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  heightCm: 'heightCm',
+  dateOfBirth: 'dateOfBirth',
+  sex: 'sex',
+  unitSystem: 'unitSystem',
+  activityLevel: 'activityLevel',
+  trainingExperience: 'trainingExperience',
+  primaryGoal: 'primaryGoal',
+  weightGoal: 'weightGoal',
+  goalRate: 'goalRate',
+  sessionsPerWeek: 'sessionsPerWeek',
+  sessionDurationMinutes: 'sessionDurationMinutes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserProfileScalarFieldEnum = (typeof UserProfileScalarFieldEnum)[keyof typeof UserProfileScalarFieldEnum]
+
+
+export const WeightRecordScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  weightKg: 'weightKg',
+  recordedAt: 'recordedAt',
+  note: 'note',
+  createdAt: 'createdAt'
+} as const
+
+export type WeightRecordScalarFieldEnum = (typeof WeightRecordScalarFieldEnum)[keyof typeof WeightRecordScalarFieldEnum]
+
+
+export const ExerciseScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  muscleGroup: 'muscleGroup',
+  equipment: 'equipment',
+  description: 'description',
+  isCustom: 'isCustom',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExerciseScalarFieldEnum = (typeof ExerciseScalarFieldEnum)[keyof typeof ExerciseScalarFieldEnum]
+
+
+export const WorkoutPlanScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  description: 'description',
+  source: 'source',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorkoutPlanScalarFieldEnum = (typeof WorkoutPlanScalarFieldEnum)[keyof typeof WorkoutPlanScalarFieldEnum]
+
+
+export const PlanDayScalarFieldEnum = {
+  id: 'id',
+  planId: 'planId',
+  name: 'name',
+  dayOfWeek: 'dayOfWeek',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlanDayScalarFieldEnum = (typeof PlanDayScalarFieldEnum)[keyof typeof PlanDayScalarFieldEnum]
+
+
+export const PlanExerciseScalarFieldEnum = {
+  id: 'id',
+  planDayId: 'planDayId',
+  exerciseId: 'exerciseId',
+  sortOrder: 'sortOrder',
+  targetSets: 'targetSets',
+  targetRepsMin: 'targetRepsMin',
+  targetRepsMax: 'targetRepsMax',
+  targetWeightKg: 'targetWeightKg',
+  restSeconds: 'restSeconds',
+  targetRpe: 'targetRpe',
+  targetRir: 'targetRir',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlanExerciseScalarFieldEnum = (typeof PlanExerciseScalarFieldEnum)[keyof typeof PlanExerciseScalarFieldEnum]
+
+
+export const PlanSetScalarFieldEnum = {
+  id: 'id',
+  planExerciseId: 'planExerciseId',
+  setNumber: 'setNumber',
+  setType: 'setType',
+  targetReps: 'targetReps',
+  targetWeightKg: 'targetWeightKg',
+  targetRpe: 'targetRpe',
+  targetRir: 'targetRir'
+} as const
+
+export type PlanSetScalarFieldEnum = (typeof PlanSetScalarFieldEnum)[keyof typeof PlanSetScalarFieldEnum]
+
+
+export const WorkoutSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  planDayId: 'planDayId',
+  name: 'name',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorkoutSessionScalarFieldEnum = (typeof WorkoutSessionScalarFieldEnum)[keyof typeof WorkoutSessionScalarFieldEnum]
+
+
+export const WorkoutSetScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  exerciseId: 'exerciseId',
+  setNumber: 'setNumber',
+  setType: 'setType',
+  weightKg: 'weightKg',
+  reps: 'reps',
+  rpe: 'rpe',
+  rir: 'rir',
+  completedAt: 'completedAt',
+  notes: 'notes'
+} as const
+
+export type WorkoutSetScalarFieldEnum = (typeof WorkoutSetScalarFieldEnum)[keyof typeof WorkoutSetScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -105,4 +253,51 @@ export const UserOrderByRelevanceFieldEnum = {
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
+export const WeightRecordOrderByRelevanceFieldEnum = {
+  note: 'note'
+} as const
+
+export type WeightRecordOrderByRelevanceFieldEnum = (typeof WeightRecordOrderByRelevanceFieldEnum)[keyof typeof WeightRecordOrderByRelevanceFieldEnum]
+
+
+export const ExerciseOrderByRelevanceFieldEnum = {
+  name: 'name',
+  muscleGroup: 'muscleGroup',
+  equipment: 'equipment',
+  description: 'description'
+} as const
+
+export type ExerciseOrderByRelevanceFieldEnum = (typeof ExerciseOrderByRelevanceFieldEnum)[keyof typeof ExerciseOrderByRelevanceFieldEnum]
+
+
+export const WorkoutPlanOrderByRelevanceFieldEnum = {
+  name: 'name',
+  description: 'description'
+} as const
+
+export type WorkoutPlanOrderByRelevanceFieldEnum = (typeof WorkoutPlanOrderByRelevanceFieldEnum)[keyof typeof WorkoutPlanOrderByRelevanceFieldEnum]
+
+
+export const PlanDayOrderByRelevanceFieldEnum = {
+  name: 'name'
+} as const
+
+export type PlanDayOrderByRelevanceFieldEnum = (typeof PlanDayOrderByRelevanceFieldEnum)[keyof typeof PlanDayOrderByRelevanceFieldEnum]
+
+
+export const WorkoutSessionOrderByRelevanceFieldEnum = {
+  name: 'name',
+  notes: 'notes'
+} as const
+
+export type WorkoutSessionOrderByRelevanceFieldEnum = (typeof WorkoutSessionOrderByRelevanceFieldEnum)[keyof typeof WorkoutSessionOrderByRelevanceFieldEnum]
+
+
+export const WorkoutSetOrderByRelevanceFieldEnum = {
+  notes: 'notes'
+} as const
+
+export type WorkoutSetOrderByRelevanceFieldEnum = (typeof WorkoutSetOrderByRelevanceFieldEnum)[keyof typeof WorkoutSetOrderByRelevanceFieldEnum]
 

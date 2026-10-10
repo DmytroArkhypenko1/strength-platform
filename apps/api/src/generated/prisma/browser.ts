@@ -22,3 +22,48 @@ export * from './enums.js';
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model UserProfile
+ * 
+ */
+export type UserProfile = Prisma.UserProfileModel
+/**
+ * Model WeightRecord
+ * 
+ */
+export type WeightRecord = Prisma.WeightRecordModel
+/**
+ * Model Exercise
+ * 
+ */
+export type Exercise = Prisma.ExerciseModel
+/**
+ * Model WorkoutPlan
+ * 
+ */
+export type WorkoutPlan = Prisma.WorkoutPlanModel
+/**
+ * Model PlanDay
+ * 
+ */
+export type PlanDay = Prisma.PlanDayModel
+/**
+ * Model PlanExercise
+ * 
+ */
+export type PlanExercise = Prisma.PlanExerciseModel
+/**
+ * Model PlanSet
+ * 
+ */
+export type PlanSet = Prisma.PlanSetModel
+/**
+ * Model WorkoutSession
+ * 
+ */
+export type WorkoutSession = Prisma.WorkoutSessionModel
+/**
+ * Model WorkoutSet
+ * 
+ */
+export type WorkoutSet = Prisma.WorkoutSetModel

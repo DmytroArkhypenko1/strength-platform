@@ -9,7 +9,84 @@
 * 🟢 You can import this file directly.
 */
 
+export const Sex = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE',
+  OTHER: 'OTHER',
+  PREFER_NOT_TO_SAY: 'PREFER_NOT_TO_SAY'
+} as const
+
+export type Sex = (typeof Sex)[keyof typeof Sex]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const UnitSystem = {
+  METRIC: 'METRIC',
+  IMPERIAL: 'IMPERIAL'
+} as const
+
+export type UnitSystem = (typeof UnitSystem)[keyof typeof UnitSystem]
+
+
+export const ActivityLevel = {
+  SEDENTARY: 'SEDENTARY',
+  LIGHTLY_ACTIVE: 'LIGHTLY_ACTIVE',
+  MODERATELY_ACTIVE: 'MODERATELY_ACTIVE',
+  VERY_ACTIVE: 'VERY_ACTIVE',
+  EXTRA_ACTIVE: 'EXTRA_ACTIVE'
+} as const
+
+export type ActivityLevel = (typeof ActivityLevel)[keyof typeof ActivityLevel]
+
+
+export const TrainingExperience = {
+  BEGINNER: 'BEGINNER',
+  INTERMEDIATE: 'INTERMEDIATE',
+  ADVANCED: 'ADVANCED'
+} as const
+
+export type TrainingExperience = (typeof TrainingExperience)[keyof typeof TrainingExperience]
+
+
+export const PrimaryGoal = {
+  MUSCLE_BUILDING: 'MUSCLE_BUILDING',
+  STRENGTH: 'STRENGTH',
+  BODY_RECOMPOSITION: 'BODY_RECOMPOSITION'
+} as const
+
+export type PrimaryGoal = (typeof PrimaryGoal)[keyof typeof PrimaryGoal]
+
+
+export const WeightGoal = {
+  GAIN: 'GAIN',
+  MAINTAIN: 'MAINTAIN',
+  LOSE: 'LOSE'
+} as const
+
+export type WeightGoal = (typeof WeightGoal)[keyof typeof WeightGoal]
+
+
+export const GoalRate = {
+  CONSERVATIVE: 'CONSERVATIVE',
+  MODERATE: 'MODERATE',
+  AGGRESSIVE: 'AGGRESSIVE'
+} as const
+
+export type GoalRate = (typeof GoalRate)[keyof typeof GoalRate]
+
+
+export const PlanSource = {
+  MANUAL: 'MANUAL',
+  AI_GENERATED: 'AI_GENERATED'
+} as const
+
+export type PlanSource = (typeof PlanSource)[keyof typeof PlanSource]
+
+
+export const SetType = {
+  WARMUP: 'WARMUP',
+  WORKING: 'WORKING',
+  DROP: 'DROP',
+  FAILURE: 'FAILURE'
+} as const
+
+export type SetType = (typeof SetType)[keyof typeof SetType]
