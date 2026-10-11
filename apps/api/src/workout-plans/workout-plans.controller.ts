@@ -21,6 +21,8 @@ import { UpdateWorkoutPlanDto } from './dto/update-workout-plan.dto.js';
 import { ReorderPlanDaysDto } from './dto/reorder-plan-days.dto.js';
 import { ReorderPlanExercisesDto } from './dto/reorder-plan-exercises.dto.js';
 import { UpdatePlanExerciseDto } from './dto/update-plan-exercise.dto.js';
+import { UpdatePlanDayDto } from './dto/update-plan-day.dto.js';
+import { UpdatePlanSetDto } from './dto/update-plan-set.dto.js';
 
 type AuthenticatedRequest = Request & {
   user: { userId: number; email: string };
@@ -33,11 +35,13 @@ export class WorkoutPlansController {
     private readonly workoutPlansService: WorkoutPlansService,
   ) {}
 
+  // get all workout plans by user route
   @Get()
   findAll(@Req() req: AuthenticatedRequest) {
     return this.workoutPlansService.findAllByUser(req.user.userId);
   }
 
+  // find one workout plan by user route
   @Get(':planId')
   findOne(
     @Req() req: AuthenticatedRequest,
@@ -49,6 +53,7 @@ export class WorkoutPlansController {
     );
   }
 
+  // create workout plan route
   @Post()
   create(
     @Req() req: AuthenticatedRequest,
@@ -57,6 +62,7 @@ export class WorkoutPlansController {
     return this.workoutPlansService.create(req.user.userId, dto);
   }
 
+  // create day for workout plan route
   @Post(':planId/days')
   createDay(
     @Req() req: AuthenticatedRequest,
@@ -70,6 +76,7 @@ export class WorkoutPlansController {
     );
   }
 
+  // update workout plan route
   @Patch(':planId')
   update(
     @Req() req: AuthenticatedRequest,
@@ -83,6 +90,19 @@ export class WorkoutPlansController {
     );
   }
 
+  // delete workout plan route
+  @Delete(':planId')
+  remove(
+    @Req() req: AuthenticatedRequest,
+    @Param('planId', ParseIntPipe) planId: number,
+  ) {
+    return this.workoutPlansService.remove(
+      req.user.userId,
+      planId,
+    );
+  }
+
+  // make workout plan active route
   @Post(':planId/activate')
   activate(
     @Req() req: AuthenticatedRequest,
@@ -94,6 +114,7 @@ export class WorkoutPlansController {
     );
   }
 
+  // change days order in workout plan route (for drag and drop feature)
   @Patch(':planId/days/order')
   reorderDays(
     @Req() req: AuthenticatedRequest,
@@ -107,6 +128,37 @@ export class WorkoutPlansController {
     );
   }
 
+  // update day in workout plan route
+  @Patch(':planId/days/:dayId')
+  updateDay(
+    @Req() req: AuthenticatedRequest,
+    @Param('planId', ParseIntPipe) planId: number,
+    @Param('dayId', ParseIntPipe) dayId: number,
+    @Body() dto: UpdatePlanDayDto,
+  ) {
+    return this.workoutPlansService.updateDay(
+      req.user.userId,
+      planId,
+      dayId,
+      dto,
+    );
+  }
+
+  // update day from workout plan route
+  @Delete(':planId/days/:dayId')
+  removeDay(
+    @Req() req: AuthenticatedRequest,
+    @Param('planId', ParseIntPipe) planId: number,
+    @Param('dayId', ParseIntPipe) dayId: number,
+  ) {
+    return this.workoutPlansService.removeDay(
+      req.user.userId,
+      planId,
+      dayId,
+    );
+  }
+
+  // change exercise order in day route (for drag and drop feature)
   @Patch(':planId/days/:dayId/exercises/order')
   reorderExercises(
     @Req() req: AuthenticatedRequest,
@@ -122,6 +174,7 @@ export class WorkoutPlansController {
     );
   }
 
+  // create exercise inside day in workout plan route
   @Post(':planId/days/:dayId/exercises')
   createExercise(
     @Req() req: AuthenticatedRequest,
@@ -137,6 +190,7 @@ export class WorkoutPlansController {
     );
   }
 
+  // update exercise inside day in workout plan route
   @Patch(':planId/days/:dayId/exercises/:planExerciseId')
   updateExercise(
     @Req() req: AuthenticatedRequest,
@@ -154,6 +208,7 @@ export class WorkoutPlansController {
     );
   }
 
+  // remove exercise inside day in workout plan route
   @Delete(':planId/days/:dayId/exercises/:planExerciseId')
   removeExercise(
     @Req() req: AuthenticatedRequest,
@@ -169,6 +224,7 @@ export class WorkoutPlansController {
     );
   }
 
+  // create detailed set for exercise route
   @Post(':planId/days/:dayId/exercises/:planExerciseId/sets')
   createSet(
     @Req() req: AuthenticatedRequest,
@@ -183,6 +239,44 @@ export class WorkoutPlansController {
       dayId,
       planExerciseId,
       dto,
+    );
+  }
+
+  // update detailed set in exercise route
+  @Patch(':planId/days/:dayId/exercises/:planExerciseId/sets/:planSetId')
+  updatePlanSet(
+    @Req() req: AuthenticatedRequest,
+    @Param('planId', ParseIntPipe) planId: number,
+    @Param('dayId', ParseIntPipe) dayId: number,
+    @Param('planExerciseId', ParseIntPipe) planExerciseId: number,
+    @Param('planSetId', ParseIntPipe) planSetId: number,
+    @Body() dto: UpdatePlanSetDto,
+  ) {
+    return this.workoutPlansService.updatePlanSet(
+      req.user.userId,
+      planId,
+      dayId,
+      planExerciseId,
+      planSetId,
+      dto,
+    );
+  }
+
+  // delete detailed set from exercise route
+  @Delete(':planId/days/:dayId/exercises/:planExerciseId/sets/:planSetId')
+  removePlanSet(
+    @Req() req: AuthenticatedRequest,
+    @Param('planId', ParseIntPipe) planId: number,
+    @Param('dayId', ParseIntPipe) dayId: number,
+    @Param('planExerciseId', ParseIntPipe) planExerciseId: number,
+    @Param('planSetId', ParseIntPipe) planSetId: number,
+  ) {
+    return this.workoutPlansService.removePlanSet(
+      req.user.userId,
+      planId,
+      dayId,
+      planExerciseId,
+      planSetId,
     );
   }
 }

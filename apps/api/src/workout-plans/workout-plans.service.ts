@@ -17,6 +17,8 @@ import { UpdateWorkoutPlanDto } from './dto/update-workout-plan.dto.js';
 import { ReorderPlanDaysDto } from './dto/reorder-plan-days.dto.js';
 import { ReorderPlanExercisesDto } from './dto/reorder-plan-exercises.dto.js';
 import { UpdatePlanExerciseDto } from './dto/update-plan-exercise.dto.js';
+import { UpdatePlanDayDto } from './dto/update-plan-day.dto.js';
+import { UpdatePlanSetDto } from './dto/update-plan-set.dto.js';
 
 @Injectable()
 export class WorkoutPlansService {
@@ -85,6 +87,119 @@ export class WorkoutPlansService {
     });
   }
 
+  async update(
+    userId: number,
+    planId: number,
+    dto: UpdateWorkoutPlanDto,
+  ) {
+    const plan = await this.prisma.workoutPlan.findFirst({
+      where: {
+        id: planId,
+        userId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!plan) {
+      throw new NotFoundException('Workout plan not found');
+    }
+
+    return this.prisma.workoutPlan.update({
+      where: {
+        id: planId,
+      },
+      data: dto,
+    });
+  }
+
+  async remove(userId: number, planId: number) {
+    const plan = await this.prisma.workoutPlan.findFirst({
+      where: {
+        id: planId,
+        userId,
+      },
+      select: {
+        id: true,
+        days: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!plan) {
+      throw new NotFoundException('Workout plan not found');
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      const dayIds = plan.days.map((day) => day.id);
+
+      if (dayIds.length > 0) {
+        await tx.workoutSession.updateMany({
+          where: {
+            userId,
+            planDayId: {
+              in: dayIds,
+            },
+          },
+          data: {
+            planDayId: null,
+          },
+        });
+      }
+
+      await tx.workoutPlan.delete({
+        where: {
+          id: plan.id,
+        },
+      });
+
+      return {
+        deletedPlanId: plan.id,
+      };
+    });
+  }
+
+  async activate(userId: number, planId: number) {
+    return this.prisma.$transaction(async (transaction) => {
+      const plan = await transaction.workoutPlan.findFirst({
+        where: {
+          id: planId,
+          userId,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!plan) {
+        throw new NotFoundException('Workout plan not found');
+      }
+
+      await transaction.workoutPlan.updateMany({
+        where: {
+          userId,
+          isActive: true,
+        },
+        data: {
+          isActive: false,
+        },
+      });
+
+      return transaction.workoutPlan.update({
+        where: {
+          id: planId,
+        },
+        data: {
+          isActive: true,
+        },
+      });
+    });
+  }
+
   async createDay(
     userId: number,
     planId: number,
@@ -141,67 +256,138 @@ export class WorkoutPlansService {
     }
   }
 
-  async update(
+  async updateDay(
     userId: number,
     planId: number,
-    dto: UpdateWorkoutPlanDto,
+    dayId: number,
+    dto: UpdatePlanDayDto,
   ) {
-    const plan = await this.prisma.workoutPlan.findFirst({
+    const planDay = await this.prisma.planDay.findFirst({
       where: {
-        id: planId,
-        userId,
+        id: dayId,
+        planId,
+        plan: {
+          userId,
+        },
       },
       select: {
         id: true,
       },
     });
 
-    if (!plan) {
-      throw new NotFoundException('Workout plan not found');
+    if (!planDay) {
+      throw new NotFoundException('Workout plan day not found');
     }
 
-    return this.prisma.workoutPlan.update({
-      where: {
-        id: planId,
-      },
-      data: dto,
-    });
-  }
-
-  async activate(userId: number, planId: number) {
-    return this.prisma.$transaction(async (transaction) => {
-      const plan = await transaction.workoutPlan.findFirst({
+    if (dto.dayOfWeek !== undefined) {
+      const conflictingDay = await this.prisma.planDay.findFirst({
         where: {
-          id: planId,
-          userId,
+          planId,
+          dayOfWeek: dto.dayOfWeek,
+          NOT: {
+            id: dayId,
+          },
         },
         select: {
           id: true,
         },
       });
 
-      if (!plan) {
-        throw new NotFoundException('Workout plan not found');
+      if (conflictingDay) {
+        throw new ConflictException(
+          'A workout plan day already exists for this day of week',
+        );
       }
+    }
 
-      await transaction.workoutPlan.updateMany({
+    return this.prisma.planDay.update({
+      where: {
+        id: planDay.id,
+      },
+      data: dto,
+    });
+  }
+
+  async removeDay(
+    userId: number,
+    planId: number,
+    dayId: number,
+  ) {
+    const planDay = await this.prisma.planDay.findFirst({
+      where: {
+        id: dayId,
+        planId,
+        plan: {
+          userId,
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!planDay) {
+      throw new NotFoundException('Workout plan day not found');
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      await tx.workoutSession.updateMany({
         where: {
           userId,
-          isActive: true,
+          planDayId: planDay.id,
         },
         data: {
-          isActive: false,
+          planDayId: null,
         },
       });
 
-      return transaction.workoutPlan.update({
+      await tx.planDay.delete({
         where: {
-          id: planId,
-        },
-        data: {
-          isActive: true,
+          id: planDay.id,
         },
       });
+
+      const remainingDays = await tx.planDay.findMany({
+        where: {
+          planId,
+        },
+        orderBy: {
+          sortOrder: 'asc',
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      await Promise.all(
+        remainingDays.map((day, index) =>
+          tx.planDay.update({
+            where: {
+              id: day.id,
+            },
+            data: {
+              sortOrder: -(index + 1),
+            },
+          }),
+        ),
+      );
+
+      await Promise.all(
+        remainingDays.map((day, index) =>
+          tx.planDay.update({
+            where: {
+              id: day.id,
+            },
+            data: {
+              sortOrder: index + 1,
+            },
+          }),
+        ),
+      );
+
+      return {
+        deletedDayId: planDay.id,
+      };
     });
   }
 
@@ -276,94 +462,6 @@ export class WorkoutPlansService {
       return transaction.planDay.findMany({
         where: {
           planId,
-        },
-        orderBy: {
-          sortOrder: 'asc',
-        },
-      });
-    });
-  }
-
-  async reorderExercises(
-    userId: number,
-    planId: number,
-    dayId: number,
-    dto: ReorderPlanExercisesDto,
-  ) {
-    return this.prisma.$transaction(async (transaction) => {
-      const planDay = await transaction.planDay.findFirst({
-        where: {
-          id: dayId,
-          plan: {
-            id: planId,
-            userId,
-          },
-        },
-        select: {
-          id: true,
-        },
-      });
-
-      if (!planDay) {
-        throw new NotFoundException('Workout plan day not found');
-      }
-
-      const exercises = await transaction.planExercise.findMany({
-        where: {
-          planDayId: dayId,
-        },
-        select: {
-          id: true,
-        },
-      });
-
-      const existingIds = new Set(exercises.map((exercise) => exercise.id));
-      const requestedIds = new Set(dto.planExerciseIds);
-
-      const containsExactlyDayExercises =
-        existingIds.size === requestedIds.size &&
-        [...requestedIds].every((exerciseId) =>
-          existingIds.has(exerciseId),
-        );
-
-      if (!containsExactlyDayExercises) {
-        throw new BadRequestException(
-          'planExerciseIds must contain every exercise in this plan day exactly once',
-        );
-      }
-
-      await Promise.all(
-        dto.planExerciseIds.map((planExerciseId, index) =>
-          transaction.planExercise.update({
-            where: {
-              id: planExerciseId,
-            },
-            data: {
-              sortOrder: -(index + 1),
-            },
-          }),
-        ),
-      );
-
-      await Promise.all(
-        dto.planExerciseIds.map((planExerciseId, index) =>
-          transaction.planExercise.update({
-            where: {
-              id: planExerciseId,
-            },
-            data: {
-              sortOrder: index + 1,
-            },
-          }),
-        ),
-      );
-
-      return transaction.planExercise.findMany({
-        where: {
-          planDayId: dayId,
-        },
-        include: {
-          exercise: true,
         },
         orderBy: {
           sortOrder: 'asc',
@@ -585,6 +683,94 @@ export class WorkoutPlansService {
     });
   }
 
+  async reorderExercises(
+    userId: number,
+    planId: number,
+    dayId: number,
+    dto: ReorderPlanExercisesDto,
+  ) {
+    return this.prisma.$transaction(async (transaction) => {
+      const planDay = await transaction.planDay.findFirst({
+        where: {
+          id: dayId,
+          plan: {
+            id: planId,
+            userId,
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!planDay) {
+        throw new NotFoundException('Workout plan day not found');
+      }
+
+      const exercises = await transaction.planExercise.findMany({
+        where: {
+          planDayId: dayId,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      const existingIds = new Set(exercises.map((exercise) => exercise.id));
+      const requestedIds = new Set(dto.planExerciseIds);
+
+      const containsExactlyDayExercises =
+        existingIds.size === requestedIds.size &&
+        [...requestedIds].every((exerciseId) =>
+          existingIds.has(exerciseId),
+        );
+
+      if (!containsExactlyDayExercises) {
+        throw new BadRequestException(
+          'planExerciseIds must contain every exercise in this plan day exactly once',
+        );
+      }
+
+      await Promise.all(
+        dto.planExerciseIds.map((planExerciseId, index) =>
+          transaction.planExercise.update({
+            where: {
+              id: planExerciseId,
+            },
+            data: {
+              sortOrder: -(index + 1),
+            },
+          }),
+        ),
+      );
+
+      await Promise.all(
+        dto.planExerciseIds.map((planExerciseId, index) =>
+          transaction.planExercise.update({
+            where: {
+              id: planExerciseId,
+            },
+            data: {
+              sortOrder: index + 1,
+            },
+          }),
+        ),
+      );
+
+      return transaction.planExercise.findMany({
+        where: {
+          planDayId: dayId,
+        },
+        include: {
+          exercise: true,
+        },
+        orderBy: {
+          sortOrder: 'asc',
+        },
+      });
+    });
+  }
+
   async createSet(
     userId: number,
     planId: number,
@@ -650,5 +836,125 @@ export class WorkoutPlansService {
 
       throw error;
     }
+  }
+
+  async updatePlanSet(
+    userId: number,
+    planId: number,
+    dayId: number,
+    planExerciseId: number,
+    planSetId: number,
+    dto: UpdatePlanSetDto,
+  ) {
+    const planSet = await this.prisma.planSet.findFirst({
+      where: {
+        id: planSetId,
+        planExerciseId,
+        planExercise: {
+          planDayId: dayId,
+          planDay: {
+            planId,
+            plan: {
+              userId,
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!planSet) {
+      throw new NotFoundException('Workout plan set not found');
+    }
+
+    return this.prisma.planSet.update({
+      where: {
+        id: planSet.id,
+      },
+      data: dto,
+    });
+  }
+
+  async removePlanSet(
+    userId: number,
+    planId: number,
+    dayId: number,
+    planExerciseId: number,
+    planSetId: number,
+  ) {
+    const planSet = await this.prisma.planSet.findFirst({
+      where: {
+        id: planSetId,
+        planExerciseId,
+        planExercise: {
+          planDayId: dayId,
+          planDay: {
+            planId,
+            plan: {
+              userId,
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!planSet) {
+      throw new NotFoundException('Workout plan set not found');
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      await tx.planSet.delete({
+        where: {
+          id: planSet.id,
+        },
+      });
+
+      const remainingSets = await tx.planSet.findMany({
+        where: {
+          planExerciseId,
+        },
+        orderBy: {
+          setNumber: 'asc',
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      await Promise.all(
+        remainingSets.map((set, index) =>
+          tx.planSet.update({
+            where: {
+              id: set.id,
+            },
+            data: {
+              setNumber: -(index + 1),
+            },
+          }),
+        ),
+      );
+
+      await Promise.all(
+        remainingSets.map((set, index) =>
+          tx.planSet.update({
+            where: {
+              id: set.id,
+            },
+            data: {
+              setNumber: index + 1,
+            },
+          }),
+        ),
+      );
+
+      return {
+        deletedPlanSetId: planSet.id,
+      };
+    });
   }
 }
