@@ -263,6 +263,8 @@ export type PlanDayOrderByWithRelationInput = {
 
 export type PlanDayWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  planId_sortOrder?: Prisma.PlanDayPlanIdSortOrderCompoundUniqueInput
+  planId_dayOfWeek?: Prisma.PlanDayPlanIdDayOfWeekCompoundUniqueInput
   AND?: Prisma.PlanDayWhereInput | Prisma.PlanDayWhereInput[]
   OR?: Prisma.PlanDayWhereInput[]
   NOT?: Prisma.PlanDayWhereInput | Prisma.PlanDayWhereInput[]
@@ -274,7 +276,7 @@ export type PlanDayWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"PlanDay"> | Date | string
   exercises?: Prisma.PlanExerciseListRelationFilter
   plan?: Prisma.XOR<Prisma.WorkoutPlanScalarRelationFilter, Prisma.WorkoutPlanWhereInput>
-}, "id">
+}, "id" | "planId_sortOrder" | "planId_dayOfWeek">
 
 export type PlanDayOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -388,6 +390,16 @@ export type PlanDayOrderByRelevanceInput = {
   fields: Prisma.PlanDayOrderByRelevanceFieldEnum | Prisma.PlanDayOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
+}
+
+export type PlanDayPlanIdSortOrderCompoundUniqueInput = {
+  planId: number
+  sortOrder: number
+}
+
+export type PlanDayPlanIdDayOfWeekCompoundUniqueInput = {
+  planId: number
+  dayOfWeek: number
 }
 
 export type PlanDayCountOrderByAggregateInput = {

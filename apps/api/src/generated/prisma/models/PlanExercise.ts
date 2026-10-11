@@ -346,6 +346,7 @@ export type PlanExerciseOrderByWithRelationInput = {
 
 export type PlanExerciseWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  planDayId_sortOrder?: Prisma.PlanExercisePlanDayIdSortOrderCompoundUniqueInput
   AND?: Prisma.PlanExerciseWhereInput | Prisma.PlanExerciseWhereInput[]
   OR?: Prisma.PlanExerciseWhereInput[]
   NOT?: Prisma.PlanExerciseWhereInput | Prisma.PlanExerciseWhereInput[]
@@ -364,7 +365,7 @@ export type PlanExerciseWhereUniqueInput = Prisma.AtLeast<{
   sets?: Prisma.PlanSetListRelationFilter
   planDay?: Prisma.XOR<Prisma.PlanDayScalarRelationFilter, Prisma.PlanDayWhereInput>
   exercise?: Prisma.XOR<Prisma.ExerciseScalarRelationFilter, Prisma.ExerciseWhereInput>
-}, "id">
+}, "id" | "planDayId_sortOrder">
 
 export type PlanExerciseOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -525,6 +526,11 @@ export type PlanExerciseListRelationFilter = {
 
 export type PlanExerciseOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type PlanExercisePlanDayIdSortOrderCompoundUniqueInput = {
+  planDayId: number
+  sortOrder: number
 }
 
 export type PlanExerciseCountOrderByAggregateInput = {

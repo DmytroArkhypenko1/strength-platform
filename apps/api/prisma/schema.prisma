@@ -141,7 +141,8 @@ model PlanDay {
 
   plan WorkoutPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
 
-  @@index([planId, sortOrder])
+  @@unique([planId, sortOrder])
+  @@unique([planId, dayOfWeek])
 }
 
 model PlanExercise {
@@ -163,7 +164,7 @@ model PlanExercise {
   planDay  PlanDay  @relation(fields: [planDayId], references: [id], onDelete: Cascade)
   exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
 
-  @@index([planDayId, sortOrder])
+  @@unique([planDayId, sortOrder])
 }
 
 model PlanSet {
@@ -215,6 +216,7 @@ model WorkoutSet {
   exercise Exercise       @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
 
   @@index([sessionId, exerciseId])
+  @@unique([sessionId, exerciseId, setNumber])
 }
 
 enum PlanSource {

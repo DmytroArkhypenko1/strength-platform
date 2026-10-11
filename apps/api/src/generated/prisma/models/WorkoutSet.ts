@@ -315,6 +315,7 @@ export type WorkoutSetOrderByWithRelationInput = {
 
 export type WorkoutSetWhereUniqueInput = Prisma.AtLeast<{
   id?: number
+  sessionId_exerciseId_setNumber?: Prisma.WorkoutSetSessionIdExerciseIdSetNumberCompoundUniqueInput
   AND?: Prisma.WorkoutSetWhereInput | Prisma.WorkoutSetWhereInput[]
   OR?: Prisma.WorkoutSetWhereInput[]
   NOT?: Prisma.WorkoutSetWhereInput | Prisma.WorkoutSetWhereInput[]
@@ -330,7 +331,7 @@ export type WorkoutSetWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"WorkoutSet"> | string | null
   session?: Prisma.XOR<Prisma.WorkoutSessionScalarRelationFilter, Prisma.WorkoutSessionWhereInput>
   exercise?: Prisma.XOR<Prisma.ExerciseScalarRelationFilter, Prisma.ExerciseWhereInput>
-}, "id">
+}, "id" | "sessionId_exerciseId_setNumber">
 
 export type WorkoutSetOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -475,6 +476,12 @@ export type WorkoutSetOrderByRelevanceInput = {
   fields: Prisma.WorkoutSetOrderByRelevanceFieldEnum | Prisma.WorkoutSetOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
   search: string
+}
+
+export type WorkoutSetSessionIdExerciseIdSetNumberCompoundUniqueInput = {
+  sessionId: number
+  exerciseId: number
+  setNumber: number
 }
 
 export type WorkoutSetCountOrderByAggregateInput = {

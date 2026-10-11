@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module.js';
 import { ProfileModule } from './profile/profile.module.js';
 import { WeightRecordsModule } from './weight-records/weight-records.module.js';
 import { ExercisesModule } from './exercises/exercises.module.js';
+import { WorkoutPlansModule } from './workout-plans/workout-plans.module.js';
+import { WorkoutSessionsModule } from './workout-sessions/workout-sessions.module.js';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { ExercisesModule } from './exercises/exercises.module.js';
     ProfileModule, 
     WeightRecordsModule,
     ExercisesModule,
+    WorkoutPlansModule,
+    WorkoutSessionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
